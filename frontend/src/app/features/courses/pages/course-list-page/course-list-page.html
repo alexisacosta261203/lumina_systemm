@@ -1,0 +1,56 @@
+<section class="catalog-header">
+  <div>
+    <h2>Catalogo de cursos</h2>
+    <p>Explora los cursos disponibles en Lumina System.</p>
+  </div>
+</section>
+
+<section class="filters">
+  <button
+    class="filter-btn"
+    [class.active]="selectedCategory === ''"
+    (click)="filterByCategory('')"
+  >
+    Todos
+  </button>
+
+  <button
+    class="filter-btn"
+    [class.active]="selectedCategory === 'Urbana'"
+    (click)="filterByCategory('Urbana')"
+  >
+    Urbana
+  </button>
+
+  <button
+    class="filter-btn"
+    [class.active]="selectedCategory === 'Retrato'"
+    (click)="filterByCategory('Retrato')"
+  >
+    Retrato
+  </button>
+
+  <button
+    class="filter-btn"
+    [class.active]="selectedCategory === 'Edicion'"
+    (click)="filterByCategory('Edicion')"
+  >
+    Edicion
+  </button>
+</section>
+
+@if (filteredCourses.length > 0) {
+  <section class="catalog-grid">
+    @for (course of filteredCourses; track course.id) {
+      <app-course-card
+        [course]="course"
+        (buyRequested)="goToPurchase($event)"
+      ></app-course-card>
+    }
+  </section>
+} @else {
+  <section class="empty-state">
+    <h3>No hay cursos para esta categoria</h3>
+    <p>Prueba con otro filtro o vuelve a mostrar todos.</p>
+  </section>
+}

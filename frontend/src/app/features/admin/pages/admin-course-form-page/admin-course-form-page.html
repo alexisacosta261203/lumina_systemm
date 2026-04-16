@@ -1,0 +1,214 @@
+<section class="form-header">
+  <div>
+    <span class="form-badge">Panel admin</span>
+    <h2>
+      {{ isEditMode ? 'Editar curso' : 'Nuevo curso' }}
+    </h2>
+    <p>
+      {{ isEditMode
+        ? 'Actualiza la informacion del curso seleccionado.'
+        : 'Captura la informacion para registrar un nuevo curso.' }}
+    </p>
+  </div>
+
+  <button type="button" class="back-btn" (click)="goBack()">
+    Volver al panel
+  </button>
+</section>
+
+<form class="course-form" [formGroup]="adminCourseForm" (ngSubmit)="saveCourse()">
+  <div class="form-grid">
+    <label>
+      Titulo
+      <input type="text" formControlName="titulo" placeholder="Ej. Fotografia Nocturna" />
+    </label>
+
+    @if ((f.titulo.invalid && f.titulo.touched) || (formSubmitted && f.titulo.invalid)) {
+      <div class="error-box">
+        @if (f.titulo.errors?.['required']) {
+          <span>El titulo es obligatorio.</span>
+        }
+        @if (f.titulo.errors?.['minlength']) {
+          <span>El titulo debe tener al menos 5 caracteres.</span>
+        }
+        @if (f.titulo.errors?.['maxlength']) {
+          <span>El titulo no debe exceder 80 caracteres.</span>
+        }
+        @if (f.titulo.errors?.['whitespace']) {
+  <span>El titulo no puede contener solo espacios.</span>
+}
+      </div>
+    }
+
+    <label class="full-width">
+      Descripcion
+      <textarea
+        rows="5"
+        formControlName="descripcion"
+        placeholder="Describe el contenido del curso"
+      ></textarea>
+    </label>
+
+    @if ((f.descripcion.invalid && f.descripcion.touched) || (formSubmitted && f.descripcion.invalid)) {
+      <div class="error-box full-width">
+        @if (f.descripcion.errors?.['required']) {
+          <span>La descripcion es obligatoria.</span>
+        }
+        @if (f.descripcion.errors?.['minlength']) {
+          <span>La descripcion debe tener al menos 20 caracteres.</span>
+        }
+        @if (f.descripcion.errors?.['maxlength']) {
+          <span>La descripcion no debe exceder 300 caracteres.</span>
+        }
+        @if (f.descripcion.errors?.['whitespace']) {
+  <span>La descripcion no puede contener solo espacios.</span>
+}
+      </div>
+    }
+
+    <label>
+      URL de imagen
+      <input type="text" formControlName="imagenUrl" placeholder="https://..." />
+    </label>
+
+    @if ((f.imagenUrl.invalid && f.imagenUrl.touched) || (formSubmitted && f.imagenUrl.invalid)) {
+      <div class="error-box">
+        @if (f.imagenUrl.errors?.['required']) {
+          <span>La imagen es obligatoria.</span>
+        }
+        @if (f.imagenUrl.errors?.['minlength']) {
+          <span>La URL debe tener al menos 12 caracteres.</span>
+        }
+        @if (f.imagenUrl.errors?.['pattern']) {
+          <span>La URL debe iniciar con http:// o https://</span>
+        }
+      </div>
+    }
+
+    <label>
+      Precio
+      <input type="number" formControlName="precio" placeholder="999" />
+    </label>
+
+    @if ((f.precio.invalid && f.precio.touched) || (formSubmitted && f.precio.invalid)) {
+      <div class="error-box">
+        @if (f.precio.errors?.['required']) {
+          <span>El precio es obligatorio.</span>
+        }
+        @if (f.precio.errors?.['min']) {
+          <span>El precio debe ser mayor o igual a 1.</span>
+        }
+        @if (f.precio.errors?.['max']) {
+          <span>El precio no debe exceder 50000.</span>
+        }
+      </div>
+    }
+
+    <label>
+      Categoria
+      <input type="text" formControlName="categoria" placeholder="Ej. Urbana" />
+    </label>
+
+    @if ((f.categoria.invalid && f.categoria.touched) || (formSubmitted && f.categoria.invalid)) {
+      <div class="error-box">
+        @if (f.categoria.errors?.['required']) {
+          <span>La categoria es obligatoria.</span>
+        }
+        @if (f.categoria.errors?.['minlength']) {
+          <span>La categoria debe tener al menos 3 caracteres.</span>
+        }
+        @if (f.categoria.errors?.['maxlength']) {
+          <span>La categoria no debe exceder 30 caracteres.</span>
+        }
+        @if (f.categoria.errors?.['whitespace']) {
+  <span>La categoria no puede contener solo espacios.</span>
+}
+      </div>
+    }
+
+    <label>
+      Duracion en horas
+      <input type="number" formControlName="duracionHoras" placeholder="12" />
+    </label>
+
+    @if ((f.duracionHoras.invalid && f.duracionHoras.touched) || (formSubmitted && f.duracionHoras.invalid)) {
+      <div class="error-box">
+        @if (f.duracionHoras.errors?.['required']) {
+          <span>La duracion es obligatoria.</span>
+        }
+        @if (f.duracionHoras.errors?.['min']) {
+          <span>La duracion debe ser mayor o igual a 1 hora.</span>
+        }
+        @if (f.duracionHoras.errors?.['max']) {
+          <span>La duracion no debe exceder 200 horas.</span>
+        }
+      </div>
+    }
+
+    <label>
+      Nivel
+      <select formControlName="nivel">
+        <option value="">Selecciona un nivel</option>
+        <option value="Basico">Basico</option>
+        <option value="Intermedio">Intermedio</option>
+        <option value="Avanzado">Avanzado</option>
+      </select>
+    </label>
+
+    @if ((f.nivel.invalid && f.nivel.touched) || (formSubmitted && f.nivel.invalid)) {
+      <div class="error-box">
+        @if (f.nivel.errors?.['required']) {
+          <span>El nivel es obligatorio.</span>
+        }
+        @if (f.nivel.errors?.['minlength']) {
+          <span>El nivel debe tener al menos 5 caracteres.</span>
+        }
+        @if (f.nivel.errors?.['pattern']) {
+          <span>Selecciona Basico, Intermedio o Avanzado.</span>
+        }
+      </div>
+    }
+
+    <label>
+      Estado del curso
+      <select formControlName="estadoCurso">
+        <option value="activo">Activo</option>
+        <option value="inactivo">Inactivo</option>
+      </select>
+    </label>
+
+    @if ((f.estadoCurso.invalid && f.estadoCurso.touched) || (formSubmitted && f.estadoCurso.invalid)) {
+      <div class="error-box">
+        @if (f.estadoCurso.errors?.['required']) {
+          <span>El estado es obligatorio.</span>
+        }
+        @if (f.estadoCurso.errors?.['minlength']) {
+          <span>El estado debe tener al menos 6 caracteres.</span>
+        }
+        @if (f.estadoCurso.errors?.['pattern']) {
+          <span>El estado debe ser activo o inactivo.</span>
+        }
+      </div>
+    }
+  </div>
+
+  <div class="form-actions">
+    <button type="submit" class="save-btn">
+      {{ isEditMode ? 'Actualizar curso' : 'Guardar curso' }}
+    </button>
+
+    <button type="button" class="cancel-btn" (click)="goBack()">
+      Cancelar
+    </button>
+  </div>
+</form>
+
+@if (responseMessage) {
+  <div class="response-box" [class.success]="responseSuccess" [class.error]="!responseSuccess">
+    <p>{{ responseMessage }}</p>
+
+    @if (responseSuccess) {
+      <a routerLink="/admin/cursos">Ir al panel de cursos</a>
+    }
+  </div>
+}

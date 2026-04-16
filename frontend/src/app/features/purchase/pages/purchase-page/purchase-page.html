@@ -1,0 +1,120 @@
+@if (course) {
+  <section class="purchase-layout">
+    <div class="purchase-summary">
+      <span class="summary-label">Compra basica</span>
+      <h2>{{ course.titulo }}</h2>
+      <p>{{ course.descripcion }}</p>
+
+      <img
+        class="summary-image"
+        [src]="course.imagenUrl"
+        [alt]="course.titulo"
+      />
+
+      <div class="summary-meta">
+        <div>
+          <span>Categoria</span>
+          <strong>{{ course.categoria }}</strong>
+        </div>
+
+        <div>
+          <span>Nivel</span>
+          <strong>{{ course.nivel }}</strong>
+        </div>
+
+        <div>
+          <span>Duracion</span>
+          <strong>{{ course.duracionHoras }} horas</strong>
+        </div>
+
+        <div>
+          <span>Precio</span>
+          <strong>{{ course.precio | currency:'MXN':'symbol':'1.0-0' }}</strong>
+        </div>
+      </div>
+    </div>
+
+    <div class="purchase-form-box">
+      <h3>Completa tu compra</h3>
+      <p>Llena tus datos y selecciona el metodo de pago.</p>
+
+      <form class="purchase-form" (ngSubmit)="submitPurchase()">
+        <label>
+          Nombre completo
+          <input
+            type="text"
+            name="nombreCliente"
+            [(ngModel)]="purchaseData.nombreCliente"
+            placeholder="Escribe tu nombre"
+          />
+        </label>
+
+        <label>
+          Correo electronico
+          <input
+            type="email"
+            name="correoCliente"
+            [(ngModel)]="purchaseData.correoCliente"
+            placeholder="correo@ejemplo.com"
+          />
+        </label>
+
+        <label>
+          Telefono
+          <input
+            type="text"
+            name="telefono"
+            [(ngModel)]="purchaseData.telefono"
+            placeholder="4491234567"
+          />
+        </label>
+
+        <label>
+          Metodo de pago
+          <select
+            name="metodoPago"
+            [(ngModel)]="purchaseData.metodoPago"
+          >
+            <option value="transferencia">Transferencia</option>
+            <option value="whatsapp">WhatsApp</option>
+            <option value="enlace">Enlace externo</option>
+          </select>
+        </label>
+
+        <div class="instructions-box">
+          <strong>Instrucciones:</strong>
+          <p>{{ getPaymentInstructions() }}</p>
+        </div>
+
+        <div class="form-actions">
+          <button type="submit" class="primary-btn">
+            Registrar compra
+          </button>
+
+          <button type="button" class="secondary-btn" (click)="goBackToCourse()">
+            Volver al curso
+          </button>
+        </div>
+      </form>
+
+      @if (purchaseSuccess) {
+        <div class="success-box">
+          <h4>Compra registrada</h4>
+          <p>{{ purchaseMessage }}</p>
+          <p>{{ getPaymentInstructions() }}</p>
+
+          <a routerLink="/cursos">Ir al catalogo</a>
+        </div>
+      }
+    </div>
+  </section>
+} @else {
+  <section class="not-found-state">
+    <h2>Curso no disponible para compra</h2>
+    <p>No existe un curso valido con el identificador {{ courseId }}.</p>
+
+    <a class="secondary-link" routerLink="/cursos">
+      Volver al catalogo
+    </a>
+  </section>
+}

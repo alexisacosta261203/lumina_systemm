@@ -1,0 +1,148 @@
+<section class="contact-wrapper">
+  <div class="contact-info">
+    <span class="contact-badge">Contacto</span>
+    <h2>Hablemos sobre tu siguiente curso de fotografia</h2>
+    <p>
+      Si tienes dudas sobre un curso, formas de pago o disponibilidad, envianos
+      un mensaje y te contactaremos.
+    </p>
+
+    <div class="info-card">
+      <strong>Lumina System</strong>
+      <p>Plataforma de venta de cursos de fotografia.</p>
+    </div>
+  </div>
+
+  <div class="contact-form-box">
+    <h3>Enviar mensaje</h3>
+
+    <form
+      #contactForm="ngForm"
+      class="contact-form"
+      (ngSubmit)="submitContactForm(contactForm)"
+      novalidate
+    >
+      <label>
+        Nombre completo
+        <input
+          type="text"
+          name="nombre"
+          [(ngModel)]="contactData.nombre"
+          #nombreModel="ngModel"
+          required
+          minlength="3"
+          maxlength="60"
+          placeholder="Escribe tu nombre"
+        />
+      </label>
+
+      @if ((nombreModel.invalid && nombreModel.touched) || (formSubmitted && nombreModel.invalid)) {
+        <div class="error-box">
+          @if (nombreModel.errors?.['required']) {
+            <span>El nombre es obligatorio.</span>
+          }
+          @if (nombreModel.errors?.['minlength']) {
+            <span>El nombre debe tener al menos 3 caracteres.</span>
+          }
+          @if (nombreModel.errors?.['maxlength']) {
+            <span>El nombre no debe exceder 60 caracteres.</span>
+          }
+        </div>
+      }
+
+      <label>
+        Correo electronico
+        <input
+          type="email"
+          name="correo"
+          [(ngModel)]="contactData.correo"
+          #correoModel="ngModel"
+          required
+          email
+          minlength="10"
+          placeholder="correo@ejemplo.com"
+        />
+      </label>
+
+      @if ((correoModel.invalid && correoModel.touched) || (formSubmitted && correoModel.invalid)) {
+        <div class="error-box">
+          @if (correoModel.errors?.['required']) {
+            <span>El correo es obligatorio.</span>
+          }
+          @if (correoModel.errors?.['email']) {
+            <span>Ingresa un correo valido.</span>
+          }
+          @if (correoModel.errors?.['minlength']) {
+            <span>El correo debe tener al menos 10 caracteres.</span>
+          }
+        </div>
+      }
+
+      <label>
+        Asunto
+        <input
+          type="text"
+          name="asunto"
+          [(ngModel)]="contactData.asunto"
+          #asuntoModel="ngModel"
+          required
+          minlength="5"
+          maxlength="80"
+          placeholder="Escribe el asunto"
+        />
+      </label>
+
+      @if ((asuntoModel.invalid && asuntoModel.touched) || (formSubmitted && asuntoModel.invalid)) {
+        <div class="error-box">
+          @if (asuntoModel.errors?.['required']) {
+            <span>El asunto es obligatorio.</span>
+          }
+          @if (asuntoModel.errors?.['minlength']) {
+            <span>El asunto debe tener al menos 5 caracteres.</span>
+          }
+          @if (asuntoModel.errors?.['maxlength']) {
+            <span>El asunto no debe exceder 80 caracteres.</span>
+          }
+        </div>
+      }
+
+      <label>
+        Mensaje
+        <textarea
+          name="mensaje"
+          [(ngModel)]="contactData.mensaje"
+          #mensajeModel="ngModel"
+          required
+          minlength="10"
+          maxlength="500"
+          rows="6"
+          placeholder="Escribe tu mensaje"
+        ></textarea>
+      </label>
+
+      @if ((mensajeModel.invalid && mensajeModel.touched) || (formSubmitted && mensajeModel.invalid)) {
+        <div class="error-box">
+          @if (mensajeModel.errors?.['required']) {
+            <span>El mensaje es obligatorio.</span>
+          }
+          @if (mensajeModel.errors?.['minlength']) {
+            <span>El mensaje debe tener al menos 10 caracteres.</span>
+          }
+          @if (mensajeModel.errors?.['maxlength']) {
+            <span>El mensaje no debe exceder 500 caracteres.</span>
+          }
+        </div>
+      }
+
+      <button type="submit" class="submit-btn">
+        Enviar mensaje
+      </button>
+    </form>
+
+    @if (responseMessage) {
+      <div class="response-box" [class.success]="sendSuccess" [class.error]="!sendSuccess">
+        <p>{{ responseMessage }}</p>
+      </div>
+    }
+  </div>
+</section>

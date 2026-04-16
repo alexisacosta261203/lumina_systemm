@@ -1,0 +1,32 @@
+<article class="course-card">
+  <img
+    class="course-image"
+    [src]="course.imagenUrl"
+    [alt]="course.titulo"
+  />
+
+  <div class="course-body">
+    <span class="course-category">{{ course.categoria }}</span>
+    <h3>{{ course.titulo }}</h3>
+    <p>{{ course.descripcion }}</p>
+
+    <div class="course-meta">
+      <span>{{ course.nivel }}</span>
+      <span>{{ course.duracionHoras }} horas</span>
+    </div>
+
+    <div class="course-price">
+      {{ course.precio | currency:'MXN':'symbol':'1.0-0' }}
+    </div>
+
+    <div class="course-actions">
+      <a [routerLink]="['/cursos', course.id]">Ver detalle</a>
+
+      @if (showBuyButton) {
+        <button type="button" (click)="requestBuy()">
+          Comprar
+        </button>
+      }
+    </div>
+  </div>
+</article>

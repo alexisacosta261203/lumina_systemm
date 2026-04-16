@@ -1,0 +1,57 @@
+@if (course) {
+  <section class="detail-wrapper">
+    <div class="detail-image-box">
+      <img
+        class="detail-image"
+        [src]="course.imagenUrl"
+        [alt]="course.titulo"
+      />
+    </div>
+
+    <div class="detail-content">
+      <span class="detail-category">{{ course.categoria }}</span>
+
+      <h2>{{ course.titulo }}</h2>
+
+      <p class="detail-description">
+        {{ course.descripcion }}
+      </p>
+
+      <div class="detail-meta">
+        <div class="meta-item">
+          <span class="meta-label">Nivel</span>
+          <strong>{{ course.nivel }}</strong>
+        </div>
+
+        <div class="meta-item">
+          <span class="meta-label">Duracion</span>
+          <strong>{{ course.duracionHoras }} horas</strong>
+        </div>
+
+        <div class="meta-item">
+          <span class="meta-label">Precio</span>
+          <strong>{{ course.precio | currency:'MXN':'symbol':'1.0-0' }}</strong>
+        </div>
+      </div>
+
+      <div class="detail-actions">
+        <button type="button" class="primary-btn" (click)="goToPurchase()">
+          Comprar curso
+        </button>
+
+        <a class="secondary-btn" routerLink="/cursos">
+          Volver al catalogo
+        </a>
+      </div>
+    </div>
+  </section>
+} @else {
+  <section class="not-found-state">
+    <h2>Curso no encontrado</h2>
+    <p>No existe un curso con el identificador {{ courseId }}.</p>
+
+    <a class="secondary-btn" routerLink="/cursos">
+      Volver al catalogo
+    </a>
+  </section>
+}

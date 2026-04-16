@@ -1,0 +1,42 @@
+<section class="hero">
+  <div class="hero-content">
+    <span class="badge">Lumina System</span>
+
+    <h1>Aprende fotografia con cursos practicos y visuales</h1>
+
+    <p>
+      Plataforma enfocada en la venta de cursos de fotografia con un estilo
+      moderno, creativo y facil de usar.
+    </p>
+
+    <div class="hero-actions">
+      <button class="primary-btn" (click)="goToCourses()">
+        Ver catalogo
+      </button>
+
+      <a class="secondary-btn" routerLink="/contacto">
+        Contactar
+      </a>
+    </div>
+  </div>
+</section>
+
+<section class="featured-section">
+  <div class="section-header">
+    <h2>Cursos destacados</h2>
+    <p>Una vista rapida de algunos cursos disponibles en la plataforma.</p>
+  </div>
+
+  @if (featuredCourses.length > 0) {
+  <div class="course-grid">
+    @for (course of featuredCourses; track course.id) {
+      <app-course-card
+        [course]="course"
+        (buyRequested)="goToPurchase($event)"
+      ></app-course-card>
+    }
+  </div>
+} @else {
+  <p class="empty-message">No hay cursos destacados disponibles por ahora.</p>
+  }
+</section>

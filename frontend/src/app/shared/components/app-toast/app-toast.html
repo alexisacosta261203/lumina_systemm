@@ -1,0 +1,6 @@
+@if (visible()) {
+  <div class="toast-box" [class.success]="type() === 'success'" [class.error]="type() === 'error'">
+    <p>{{ message() }}</p>
+    <button type="button" (click)="close()">X</button>
+  </div>
+}

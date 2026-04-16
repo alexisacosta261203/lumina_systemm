@@ -1,0 +1,68 @@
+<section class="admin-header">
+  <div>
+    <span class="admin-badge">Panel admin</span>
+    <h2>Gestion de cursos</h2>
+    <p>Administra el catalogo disponible en Lumina System.</p>
+  </div>
+
+  <button class="new-course-btn" type="button" (click)="goToNewCourse()">
+    Nuevo curso
+  </button>
+</section>
+
+@if (responseMessage) {
+  <div class="response-box">
+    <p>{{ responseMessage }}</p>
+  </div>
+}
+
+@if (courses.length > 0) {
+  <section class="admin-grid">
+    @for (course of courses; track course.id) {
+      <article class="admin-card">
+        <img
+          class="admin-image"
+          [src]="course.imagenUrl"
+          [alt]="course.titulo"
+        />
+
+        <div class="admin-body">
+          <div class="admin-top">
+            <span class="course-category">{{ course.categoria }}</span>
+            <span class="course-status" [class.inactive]="!course.activo">
+              {{ course.activo ? 'Activo' : 'Inactivo' }}
+            </span>
+          </div>
+
+          <h3>{{ course.titulo }}</h3>
+          <p>{{ course.descripcion }}</p>
+
+          <div class="admin-meta">
+            <span>{{ course.nivel }}</span>
+            <span>{{ course.duracionHoras }} horas</span>
+            <strong>{{ course.precio | currency:'MXN':'symbol':'1.0-0' }}</strong>
+          </div>
+
+          <div class="admin-actions">
+            <button type="button" class="edit-btn" (click)="goToEditCourse(course.id)">
+              Editar
+            </button>
+
+            <button type="button" class="delete-btn" (click)="deleteCourse(course.id)">
+              Eliminar
+            </button>
+
+            <a [routerLink]="['/cursos', course.id]">
+              Ver detalle
+            </a>
+          </div>
+        </div>
+      </article>
+    }
+  </section>
+} @else {
+  <section class="empty-state">
+    <h3>No hay cursos registrados</h3>
+    <p>Agrega un curso nuevo desde el panel de administracion.</p>
+  </section>
+}ng generate service core/services/ui-notifications --skip-tests
