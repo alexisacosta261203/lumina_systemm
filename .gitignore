@@ -6,5 +6,7 @@ frontend/.vscode
 backend/node_modules
 backend/.env
 
+backups/
+
 .DS_Store
 Thumbs.db
