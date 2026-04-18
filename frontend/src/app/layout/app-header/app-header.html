@@ -21,8 +21,30 @@
       Contacto
     </a>
 
-    <a routerLink="/admin/cursos" routerLinkActive="active">
-      Admin Cursos
-    </a>
+    @if (!isAuthenticated()) {
+      <a routerLink="/login" routerLinkActive="active">
+        Login
+      </a>
+
+      <a routerLink="/registro" routerLinkActive="active">
+        Registro
+      </a>
+    }
+
+    @if (isAuthenticated()) {
+      <span class="user-badge">
+        {{ user()?.nombre }} ({{ user()?.role }})
+      </span>
+
+      @if (isAdmin()) {
+        <a routerLink="/admin/cursos" routerLinkActive="active">
+          Admin Cursos
+        </a>
+      }
+
+      <button type="button" class="logout-btn" (click)="logout()">
+        Cerrar sesion
+      </button>
+    }
   </nav>
 </header>

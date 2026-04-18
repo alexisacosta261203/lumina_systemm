@@ -1,51 +1,108 @@
-import { Component, OnInit, inject } from '@angular/core';
-import { CurrencyPipe } from '@angular/common';
-import { Router, RouterLink } from '@angular/router';
+import { Component, inject, signal } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { RouterLink } from '@angular/router';
 import { AdminCoursesService } from '../../../../core/services/admin-courses';
+import { AuthService } from '../../../../core/services/auth';
 import { Course } from '../../../../shared/interfaces/course.interface';
-import { UiNotificationsService } from '../../../../core/services/ui-notifications';
 
 @Component({
   selector: 'app-admin-course-list-page',
-  imports: [RouterLink, CurrencyPipe],
+  standalone: true,
+  imports: [CommonModule, RouterLink],
   templateUrl: './admin-course-list-page.html',
   styleUrl: './admin-course-list-page.scss',
 })
-export class AdminCourseListPage implements OnInit {
+export class AdminCourseListPage {
   private readonly adminCoursesService = inject(AdminCoursesService);
-  private readonly router = inject(Router);
-  private readonly uiNotificationsService = inject(UiNotificationsService);
+  private readonly authService = inject(AuthService);
 
-  courses: Course[] = [];
-  responseMessage = '';
+  courses = signal<Course[]>([]);
+  loading = signal(true);
 
-  ngOnInit(): void {
+  showDeleteModal = signal(false);
+  selectedCourse = signal<Course | null>(null);
+  adminPassword = signal('');
+  deleteError = signal('');
+  deleteLoading = signal(false);
+
+  constructor() {
     this.loadCourses();
   }
 
   loadCourses(): void {
-    this.adminCoursesService.getCourses().subscribe((courses) => {
-      this.courses = courses;
+    this.loading.set(true);
+
+    this.adminCoursesService.getCourses().subscribe({
+      next: (courses) => {
+        this.courses.set(courses);
+        this.loading.set(false);
+      },
+      error: () => {
+        this.loading.set(false);
+      },
     });
   }
 
-  goToNewCourse(): void {
-    this.router.navigate(['/admin/cursos/nuevo']);
+  openDeleteModal(course: Course): void {
+    this.selectedCourse.set(course);
+    this.adminPassword.set('');
+    this.deleteError.set('');
+    this.deleteLoading.set(false);
+    this.showDeleteModal.set(true);
   }
 
-  goToEditCourse(courseId: number): void {
-    this.router.navigate(['/admin/cursos/editar', courseId]);
+  closeDeleteModal(): void {
+    this.showDeleteModal.set(false);
+    this.selectedCourse.set(null);
+    this.adminPassword.set('');
+    this.deleteError.set('');
+    this.deleteLoading.set(false);
   }
 
-  deleteCourse(courseId: number): void {
-    this.adminCoursesService.deleteCourse(courseId).subscribe((response) => {
-      this.responseMessage = response.message;
-      this.loadCourses();
-      this.uiNotificationsService.show(
-  response.message,
-  response.ok ? 'success' : 'error'
-);
+  onPasswordInput(event: Event): void {
+    const value = (event.target as HTMLInputElement).value;
+    this.adminPassword.set(value);
+  }
+
+  confirmDelete(): void {
+    const course = this.selectedCourse();
+
+    if (!course) {
+      return;
+    }
+
+    if (!this.adminPassword().trim()) {
+      this.deleteError.set('Debes ingresar la contraseña de administrador.');
+      return;
+    }
+
+    this.deleteError.set('');
+    this.deleteLoading.set(true);
+
+    this.authService.confirmAdminPassword(this.adminPassword()).subscribe({
+      next: (response) => {
+        if (response.ok) {
+          this.adminCoursesService.deleteCourse(course.id).subscribe({
+            next: () => {
+              this.deleteLoading.set(false);
+              this.closeDeleteModal();
+              this.loadCourses();
+            },
+            error: (error) => {
+              this.deleteLoading.set(false);
+              this.deleteError.set(
+                error?.error?.message || 'No fue posible eliminar el curso.'
+              );
+            },
+          });
+        }
+      },
+      error: (error) => {
+        this.deleteLoading.set(false);
+        this.deleteError.set(
+          error?.error?.message || 'La contraseña de administrador no es correcta.'
+        );
+      },
     });
-    
   }
 }

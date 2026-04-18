@@ -1,68 +1,105 @@
-<section class="admin-header">
-  <div>
-    <span class="admin-badge">Panel admin</span>
-    <h2>Gestion de cursos</h2>
-    <p>Administra el catalogo disponible en Lumina System.</p>
+<section class="admin-page">
+  <div class="admin-header">
+    <div>
+      <p class="admin-eyebrow">Panel de administración</p>
+      <h1>Gestión de cursos</h1>
+      <p class="admin-subtitle">Crea, edita y elimina cursos de Lumina System.</p>
+    </div>
+
+    <a routerLink="/admin/cursos/nuevo" class="new-course-btn">
+      Nuevo curso
+    </a>
   </div>
 
-  <button class="new-course-btn" type="button" (click)="goToNewCourse()">
-    Nuevo curso
-  </button>
-</section>
+  @if (loading()) {
+    <p class="state-message">Cargando cursos...</p>
+  } @else {
+    <div class="course-grid">
+      @for (course of courses(); track course.id) {
+        <article class="course-card">
+        <img [src]="course.imagenUrl" [alt]="course.titulo" class="course-image" />
+          <div class="course-content">
+            <div class="course-meta">
+              <span>{{ course.categoria }}</span>
+              <span>{{ course.nivel }}</span>
+            </div>
 
-@if (responseMessage) {
-  <div class="response-box">
-    <p>{{ responseMessage }}</p>
-  </div>
-}
+            <h2>{{ course.titulo }}</h2>
+            <p>{{ course.descripcion }}</p>
 
-@if (courses.length > 0) {
-  <section class="admin-grid">
-    @for (course of courses; track course.id) {
-      <article class="admin-card">
-        <img
-          class="admin-image"
-          [src]="course.imagenUrl"
-          [alt]="course.titulo"
-        />
+            <div class="course-footer">
+              <strong>${{ course.precio }}</strong>
 
-        <div class="admin-body">
-          <div class="admin-top">
-            <span class="course-category">{{ course.categoria }}</span>
-            <span class="course-status" [class.inactive]="!course.activo">
-              {{ course.activo ? 'Activo' : 'Inactivo' }}
-            </span>
+              <div class="course-actions">
+                <a
+                  [routerLink]="['/admin/cursos/editar', course.id]"
+                  class="edit-btn"
+                >
+                  Editar
+                </a>
+
+                <button
+                  type="button"
+                  class="delete-btn"
+                  (click)="openDeleteModal(course)"
+                >
+                  Eliminar
+                </button>
+              </div>
+            </div>
           </div>
+        </article>
+      }
+    </div>
+  }
 
-          <h3>{{ course.titulo }}</h3>
-          <p>{{ course.descripcion }}</p>
+  @if (showDeleteModal()) {
+    <div class="modal-backdrop">
+      <div class="delete-modal">
+        <p class="modal-eyebrow">Confirmación de seguridad</p>
+        <h3>Eliminar curso</h3>
 
-          <div class="admin-meta">
-            <span>{{ course.nivel }}</span>
-            <span>{{ course.duracionHoras }} horas</span>
-            <strong>{{ course.precio | currency:'MXN':'symbol':'1.0-0' }}</strong>
-          </div>
+        <p class="modal-text">
+          ¿Seguro que quieres eliminar el curso
+          <strong>{{ selectedCourse()?.titulo }}</strong>?
+        </p>
 
-          <div class="admin-actions">
-            <button type="button" class="edit-btn" (click)="goToEditCourse(course.id)">
-              Editar
-            </button>
-
-            <button type="button" class="delete-btn" (click)="deleteCourse(course.id)">
-              Eliminar
-            </button>
-
-            <a [routerLink]="['/cursos', course.id]">
-              Ver detalle
-            </a>
-          </div>
+        <div class="form-group">
+          <label for="adminPassword">Contraseña de administrador</label>
+          <input
+            id="adminPassword"
+            type="password"
+            [value]="adminPassword()"
+            (input)="onPasswordInput($event)"
+            placeholder="Ingresa tu contraseña"
+          />
         </div>
-      </article>
-    }
-  </section>
-} @else {
-  <section class="empty-state">
-    <h3>No hay cursos registrados</h3>
-    <p>Agrega un curso nuevo desde el panel de administracion.</p>
-  </section>
-}ng generate service core/services/ui-notifications --skip-tests
+
+        @if (deleteError()) {
+          <div class="modal-error">
+            {{ deleteError() }}
+          </div>
+        }
+
+        <div class="modal-actions">
+          <button type="button" class="cancel-btn" (click)="closeDeleteModal()">
+            Cancelar
+          </button>
+
+          <button
+            type="button"
+            class="confirm-btn"
+            [disabled]="deleteLoading()"
+            (click)="confirmDelete()"
+          >
+            @if (!deleteLoading()) {
+              <span>Confirmar eliminación</span>
+            } @else {
+              <span>Validando...</span>
+            }
+          </button>
+        </div>
+      </div>
+    </div>
+  }
+</section>

@@ -8,14 +8,24 @@ import { AdminCourseListPage } from './features/admin/pages/admin-course-list-pa
 import { AdminCourseFormPage } from './features/admin/pages/admin-course-form-page/admin-course-form-page';
 import { NotFoundPage } from './shared/components/not-found-page/not-found-page';
 
+import { LoginPage } from './features/auth/pages/login_pages/login-page';
+import { RegisterPage } from './features/auth/pages/register_pages/register-page';
+import { adminGuard } from './core/guards/admin.guard';
+import { guestGuard } from './core/guards/guest.guard';
+
 export const routes: Routes = [
   { path: '', component: HomePage },
   { path: 'cursos', component: CourseListPage },
   { path: 'cursos/:id', component: CourseDetailPage },
   { path: 'comprar/:id', component: PurchasePage },
   { path: 'contacto', component: ContactPage },
-  { path: 'admin/cursos', component: AdminCourseListPage },
-  { path: 'admin/cursos/nuevo', component: AdminCourseFormPage },
-  { path: 'admin/cursos/editar/:id', component: AdminCourseFormPage },
+
+  { path: 'login', component: LoginPage, canActivate: [guestGuard] },
+  { path: 'registro', component: RegisterPage, canActivate: [guestGuard] },
+
+  { path: 'admin/cursos', component: AdminCourseListPage, canActivate: [adminGuard] },
+  { path: 'admin/cursos/nuevo', component: AdminCourseFormPage, canActivate: [adminGuard] },
+  { path: 'admin/cursos/editar/:id', component: AdminCourseFormPage, canActivate: [adminGuard] },
+
   { path: '**', component: NotFoundPage },
 ];

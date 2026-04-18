@@ -23,6 +23,7 @@
   display: flex;
   gap: 16px;
   flex-wrap: wrap;
+  align-items: center;
 }
 
 .nav a {
@@ -40,4 +41,27 @@
   background-color: #ffffff;
   color: #111827;
   font-weight: 700;
+}
+
+.user-badge {
+  padding: 8px 12px;
+  border-radius: 8px;
+  background-color: rgba(69, 255, 214, 0.12);
+  border: 1px solid rgba(69, 255, 214, 0.25);
+  color: #45ffd6;
+  font-weight: 600;
+}
+
+.logout-btn {
+  border: none;
+  padding: 8px 12px;
+  border-radius: 8px;
+  background-color: #ef4444;
+  color: #ffffff;
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.logout-btn:hover {
+  background-color: #dc2626;
 }
