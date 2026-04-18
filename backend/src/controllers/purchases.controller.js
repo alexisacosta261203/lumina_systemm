@@ -132,8 +132,26 @@ const hasPurchasedCourse = async (req, res) => {
   }
 };
 
+const getMyPurchasedCourses = async (req, res) => {
+  try {
+    const courses = await PurchaseModel.getPurchasedCoursesByUser(req.user.id);
+
+    return res.json({
+      ok: true,
+      data: courses,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      ok: false,
+      message: 'Error al obtener mis cursos.',
+      error: error.message,
+    });
+  }
+};
+
 module.exports = {
   createPurchase,
   getMyPurchasedCourseIds,
   hasPurchasedCourse,
+  getMyPurchasedCourses,
 };

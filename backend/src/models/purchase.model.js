@@ -54,8 +54,31 @@ const getPurchasedCourseIdsByUser = async (userId) => {
   return rows.map((row) => row.curso_id);
 };
 
+const getPurchasedCoursesByUser = async (userId) => {
+  const [rows] = await pool.execute(
+    `SELECT
+      c.id,
+      c.titulo,
+      c.descripcion,
+      c.imagen_url AS imagenUrl,
+      c.precio,
+      c.categoria,
+      c.duracion_horas AS duracionHoras,
+      c.nivel,
+      c.activo
+     FROM compras cp
+     INNER JOIN cursos c ON c.id = cp.curso_id
+     WHERE cp.user_id = ?
+     ORDER BY cp.id DESC`,
+    [userId]
+  );
+
+  return rows;
+};
+
 module.exports = {
   createPurchase,
   hasUserPurchasedCourse,
   getPurchasedCourseIdsByUser,
+  getPurchasedCoursesByUser,
 };

@@ -1,0 +1,100 @@
+@if (loading) {
+  <section class="my-course-detail-page">
+    <div class="container">
+      <div class="state-box">
+        <h2>Cargando curso...</h2>
+        <p>Estamos preparando tu contenido.</p>
+      </div>
+    </div>
+  </section>
+} @else if (course && accessGranted) {
+  <section class="my-course-detail-page">
+    <div class="container">
+      <header class="course-header">
+        <div class="course-image-box">
+          <img
+            class="course-image"
+            [src]="course.imagenUrl"
+            [alt]="course.titulo"
+          />
+        </div>
+
+        <div class="course-summary">
+          <span class="course-badge">Acceso concedido</span>
+          <h1>{{ course.titulo }}</h1>
+          <p class="course-description">
+            {{ course.descripcion }}
+          </p>
+
+          <div class="course-meta">
+            <span>Nivel: {{ course.nivel }}</span>
+            <span>Duración: {{ course.duracionHoras }} horas</span>
+            <span>Precio de referencia: ${{ course.precio }}</span>
+          </div>
+
+          <div class="course-actions">
+            <button type="button" class="primary-btn">
+              Continuar curso
+            </button>
+
+            <button
+              type="button"
+              class="secondary-btn"
+              (click)="goBackToMyCourses()"
+            >
+              Volver a mis cursos
+            </button>
+          </div>
+        </div>
+      </header>
+
+      <section class="content-card">
+        <h2>Bienvenido a tu curso</h2>
+        <p>
+          Este apartado representa el acceso del alumno al contenido adquirido.
+          Aquí puedes mostrar material, lecciones, recursos o avances del curso.
+        </p>
+      </section>
+
+      <section class="content-card">
+        <h2>Temario base</h2>
+
+        <div class="modules-list">
+          @for (module of modules; track module.titulo) {
+            <article class="module-item">
+              <h3>{{ module.titulo }}</h3>
+              <p>{{ module.descripcion }}</p>
+            </article>
+          }
+        </div>
+      </section>
+
+      <section class="content-card">
+        <h2>Recursos del curso</h2>
+        <ul>
+          <li>Guía PDF de apoyo</li>
+          <li>Ejercicios recomendados</li>
+          <li>Prácticas para reforzar conocimientos</li>
+          <li>Proyecto final del curso</li>
+        </ul>
+      </section>
+    </div>
+  </section>
+} @else {
+  <section class="my-course-detail-page">
+    <div class="container">
+      <div class="state-box">
+        <h2>No fue posible mostrar el curso</h2>
+        <p>Verifica tu acceso e inténtalo nuevamente.</p>
+
+        <button
+          type="button"
+          class="secondary-btn"
+          (click)="goBackToMyCourses()"
+        >
+          Volver a mis cursos
+        </button>
+      </div>
+    </div>
+  </section>
+}

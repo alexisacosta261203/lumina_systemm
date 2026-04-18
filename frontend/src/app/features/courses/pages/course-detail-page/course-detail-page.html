@@ -35,9 +35,19 @@
       </div>
 
       <div class="detail-actions">
-        <button type="button" class="primary-btn" (click)="goToPurchase()">
-          Comprar curso
-        </button>
+        @if (loadingPurchaseStatus) {
+          <button type="button" class="primary-btn" disabled>
+            Validando acceso...
+          </button>
+        } @else if (isPurchased) {
+          <button type="button" class="primary-btn" (click)="goToMyCourses()">
+            Ir a mis cursos
+          </button>
+        } @else {
+          <button type="button" class="primary-btn" (click)="goToPurchase()">
+            Comprar curso
+          </button>
+        }
 
         <a class="secondary-btn" routerLink="/cursos">
           Volver al catalogo

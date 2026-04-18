@@ -32,6 +32,10 @@
     }
 
     @if (isAuthenticated()) {
+      <a routerLink="/mis-cursos" routerLinkActive="active">
+        Mis cursos
+      </a>
+
       <span class="user-badge">
         {{ user()?.nombre }} ({{ user()?.role }})
       </span>

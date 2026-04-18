@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { API_BASE_URL } from '../constants/api.constants';
 import { AuthService } from './auth';
+import { Course } from '../../shared/interfaces/course.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -72,6 +73,18 @@ export class PurchasesService {
         purchased: boolean;
       };
     }>(`${this.apiUrl}/mine/has-course/${cursoId}`, {
+      headers: this.authService.getAuthHeaders(),
+    });
+  }
+
+  getMyPurchasedCourses(): Observable<{
+    ok: boolean;
+    data: Course[];
+  }> {
+    return this.http.get<{
+      ok: boolean;
+      data: Course[];
+    }>(`${this.apiUrl}/mine`, {
       headers: this.authService.getAuthHeaders(),
     });
   }

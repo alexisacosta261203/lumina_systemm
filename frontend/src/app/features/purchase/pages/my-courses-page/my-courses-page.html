@@ -1,0 +1,46 @@
+<section class="my-courses-page">
+  <div class="container">
+    <header class="page-header">
+      <h1>Mis cursos</h1>
+      <p>Aquí puedes ver los cursos que ya has comprado.</p>
+    </header>
+
+    @if (loading) {
+      <div class="state-box">
+        <p>Cargando tus cursos...</p>
+      </div>
+    } @else if (courses.length === 0) {
+      <div class="state-box">
+        <h2>Aún no has comprado cursos</h2>
+        <p>Cuando realices una compra, tus cursos aparecerán aquí.</p>
+      </div>
+    } @else {
+      <div class="courses-grid">
+        @for (course of courses; track course.id) {
+          <article class="course-card">
+            <img
+              class="course-image"
+              [src]="course.imagenUrl"
+              [alt]="course.titulo"
+            />
+
+            <div class="course-body">
+              <h2>{{ course.titulo }}</h2>
+              <p class="description">{{ course.descripcion }}</p>
+
+              <div class="course-meta">
+                <span>Nivel: {{ course.nivel }}</span>
+                <span>Duración: {{ course.duracionHoras }} horas</span>
+                <span>Precio: ${{ course.precio }}</span>
+              </div>
+
+              <button type="button" (click)="goToCoursePurchase(course.id)">
+                Ver curso
+              </button>
+            </div>
+          </article>
+        }
+      </div>
+    }
+  </div>
+</section>
