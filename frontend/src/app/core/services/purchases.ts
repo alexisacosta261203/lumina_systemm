@@ -1,20 +1,50 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Purchase } from '../../shared/interfaces/purchase.interface';
 import { API_BASE_URL } from '../constants/api.constants';
+import { AuthService } from './auth';
 
 @Injectable({
   providedIn: 'root',
 })
 export class PurchasesService {
   private readonly http = inject(HttpClient);
+  private readonly authService = inject(AuthService);
   private readonly apiUrl = `${API_BASE_URL}/compras`;
 
-  createPurchase(purchase: Purchase): Observable<{ ok: boolean; message: string; id?: number }> {
-    return this.http.post<{ ok: boolean; message: string; id?: number }>(
+  createPurchase(payload: {
+    cursoId: number;
+    metodoPago: string;
+    comprobanteUrl?: string | null;
+  }): Observable<{
+    ok: boolean;
+    message: string;
+    id?: number;
+    data?: {
+      id: number;
+      cursoId: number;
+      tituloCurso: string;
+      precioPagado: number;
+      userId: number;
+    };
+  }> {
+    return this.http.post<{
+      ok: boolean;
+      message: string;
+      id?: number;
+      data?: {
+        id: number;
+        cursoId: number;
+        tituloCurso: string;
+        precioPagado: number;
+        userId: number;
+      };
+    }>(
       this.apiUrl,
-      purchase
+      payload,
+      {
+        headers: this.authService.getAuthHeaders(),
+      }
     );
   }
 }

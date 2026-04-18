@@ -1,7 +1,7 @@
 @if (course) {
   <section class="purchase-layout">
     <div class="purchase-summary">
-      <span class="summary-label">Compra basica</span>
+      <span class="summary-label">Compra autenticada</span>
       <h2>{{ course.titulo }}</h2>
       <p>{{ course.descripcion }}</p>
 
@@ -36,16 +36,15 @@
 
     <div class="purchase-form-box">
       <h3>Completa tu compra</h3>
-      <p>Llena tus datos y selecciona el metodo de pago.</p>
+      <p>La compra se registrará con la cuenta que inició sesión.</p>
 
       <form class="purchase-form" (ngSubmit)="submitPurchase()">
         <label>
           Nombre completo
           <input
             type="text"
-            name="nombreCliente"
-            [(ngModel)]="purchaseData.nombreCliente"
-            placeholder="Escribe tu nombre"
+            [value]="nombreCliente"
+            readonly
           />
         </label>
 
@@ -53,9 +52,8 @@
           Correo electronico
           <input
             type="email"
-            name="correoCliente"
-            [(ngModel)]="purchaseData.correoCliente"
-            placeholder="correo@ejemplo.com"
+            [value]="correoCliente"
+            readonly
           />
         </label>
 
@@ -63,9 +61,8 @@
           Telefono
           <input
             type="text"
-            name="telefono"
-            [(ngModel)]="purchaseData.telefono"
-            placeholder="4491234567"
+            [value]="telefono"
+            readonly
           />
         </label>
 
@@ -76,7 +73,6 @@
             [(ngModel)]="purchaseData.metodoPago"
           >
             <option value="transferencia">Transferencia</option>
-            <option value="whatsapp">WhatsApp</option>
             <option value="enlace">Enlace externo</option>
           </select>
         </label>
@@ -87,8 +83,12 @@
         </div>
 
         <div class="form-actions">
-          <button type="submit" class="primary-btn">
-            Registrar compra
+          <button type="submit" class="primary-btn" [disabled]="loadingPurchase">
+            @if (!loadingPurchase) {
+              <span>Registrar compra</span>
+            } @else {
+              <span>Registrando...</span>
+            }
           </button>
 
           <button type="button" class="secondary-btn" (click)="goBackToCourse()">
