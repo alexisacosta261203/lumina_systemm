@@ -31,6 +31,31 @@ const createPurchase = async (purchaseData) => {
   return result.insertId;
 };
 
+const hasUserPurchasedCourse = async (userId, cursoId) => {
+  const [rows] = await pool.execute(
+    `SELECT id
+     FROM compras
+     WHERE user_id = ? AND curso_id = ?
+     LIMIT 1`,
+    [userId, cursoId]
+  );
+
+  return rows.length > 0;
+};
+
+const getPurchasedCourseIdsByUser = async (userId) => {
+  const [rows] = await pool.execute(
+    `SELECT curso_id
+     FROM compras
+     WHERE user_id = ?`,
+    [userId]
+  );
+
+  return rows.map((row) => row.curso_id);
+};
+
 module.exports = {
   createPurchase,
+  hasUserPurchasedCourse,
+  getPurchasedCourseIdsByUser,
 };

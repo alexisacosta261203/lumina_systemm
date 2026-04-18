@@ -22,6 +22,15 @@ const createPurchase = async (req, res) => {
       });
     }
 
+    const alreadyPurchased = await PurchaseModel.hasUserPurchasedCourse(user.id, cursoId);
+
+    if (alreadyPurchased) {
+      return res.status(409).json({
+        ok: false,
+        message: 'Ya compraste este curso.',
+      });
+    }
+
     const [courseRows] = await pool.execute(
       `SELECT id, titulo, precio, activo
        FROM cursos
@@ -78,6 +87,53 @@ const createPurchase = async (req, res) => {
   }
 };
 
+const getMyPurchasedCourseIds = async (req, res) => {
+  try {
+    const courseIds = await PurchaseModel.getPurchasedCourseIdsByUser(req.user.id);
+
+    return res.json({
+      ok: true,
+      data: courseIds,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      ok: false,
+      message: 'Error al obtener cursos comprados.',
+      error: error.message,
+    });
+  }
+};
+
+const hasPurchasedCourse = async (req, res) => {
+  try {
+    const cursoId = Number(req.params.cursoId);
+
+    if (!cursoId) {
+      return res.status(400).json({
+        ok: false,
+        message: 'cursoId invalido.',
+      });
+    }
+
+    const purchased = await PurchaseModel.hasUserPurchasedCourse(req.user.id, cursoId);
+
+    return res.json({
+      ok: true,
+      data: {
+        purchased,
+      },
+    });
+  } catch (error) {
+    return res.status(500).json({
+      ok: false,
+      message: 'Error al validar compra del curso.',
+      error: error.message,
+    });
+  }
+};
+
 module.exports = {
   createPurchase,
+  getMyPurchasedCourseIds,
+  hasPurchasedCourse,
 };
