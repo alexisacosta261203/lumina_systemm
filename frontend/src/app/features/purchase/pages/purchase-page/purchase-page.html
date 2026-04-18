@@ -38,64 +38,77 @@
       <h3>Completa tu compra</h3>
       <p>La compra se registrará con la cuenta que inició sesión.</p>
 
-      <form class="purchase-form" (ngSubmit)="submitPurchase()">
-        <label>
-          Nombre completo
-          <input
-            type="text"
-            [value]="nombreCliente"
-            readonly
-          />
-        </label>
-
-        <label>
-          Correo electronico
-          <input
-            type="email"
-            [value]="correoCliente"
-            readonly
-          />
-        </label>
-
-        <label>
-          Telefono
-          <input
-            type="text"
-            [value]="telefono"
-            readonly
-          />
-        </label>
-
-        <label>
-          Metodo de pago
-          <select
-            name="metodoPago"
-            [(ngModel)]="purchaseData.metodoPago"
-          >
-            <option value="transferencia">Transferencia</option>
-            <option value="enlace">Enlace externo</option>
-          </select>
-        </label>
-
+      @if (checkingPurchase) {
         <div class="instructions-box">
-          <strong>Instrucciones:</strong>
-          <p>{{ getPaymentInstructions() }}</p>
+          <strong>Validando compra:</strong>
+          <p>Estamos revisando si este curso ya fue adquirido por tu cuenta.</p>
         </div>
-
-        <div class="form-actions">
-          <button type="submit" class="primary-btn" [disabled]="loadingPurchase">
-            @if (!loadingPurchase) {
-              <span>Registrar compra</span>
-            } @else {
-              <span>Registrando...</span>
-            }
-          </button>
-
-          <button type="button" class="secondary-btn" (click)="goBackToCourse()">
-            Volver al curso
-          </button>
+      } @else if (alreadyPurchased) {
+        <div class="success-box">
+          <h4>Curso ya comprado</h4>
+          <p>Este curso ya fue adquirido con tu cuenta.</p>
+          <a routerLink="/cursos">Volver al catalogo</a>
         </div>
-      </form>
+      } @else {
+        <form class="purchase-form" (ngSubmit)="submitPurchase()">
+          <label>
+            Nombre completo
+            <input
+              type="text"
+              [value]="nombreCliente"
+              readonly
+            />
+          </label>
+
+          <label>
+            Correo electronico
+            <input
+              type="email"
+              [value]="correoCliente"
+              readonly
+            />
+          </label>
+
+          <label>
+            Telefono
+            <input
+              type="text"
+              [value]="telefono"
+              readonly
+            />
+          </label>
+
+          <label>
+            Metodo de pago
+            <select
+              name="metodoPago"
+              [(ngModel)]="purchaseData.metodoPago"
+            >
+              <option value="transferencia">Transferencia</option>
+              <option value="enlace">Enlace externo</option>
+            </select>
+          </label>
+
+          <div class="instructions-box">
+            <strong>Instrucciones:</strong>
+            <p>{{ getPaymentInstructions() }}</p>
+          </div>
+
+          <div class="form-actions">
+            <button type="submit" class="primary-btn" [disabled]="loadingPurchase">
+              @if (!loadingPurchase) {
+                <span>Registrar compra</span>
+              } @else {
+                <span>Registrando...</span>
+              }
+            </button>
+
+            <button type="button" class="secondary-btn" (click)="goBackToCourse()">
+              Volver al curso
+            </button>
+          </div>
+        </form>
+      }
 
       @if (purchaseSuccess) {
         <div class="success-box">

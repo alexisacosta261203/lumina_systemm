@@ -38,6 +38,8 @@ export class PurchasePage implements OnInit {
   purchaseSuccess = false;
   purchaseMessage = '';
   loadingPurchase = false;
+  alreadyPurchased = false;
+  checkingPurchase = true;
 
   ngOnInit(): void {
     if (!this.authService.isAuthenticated()) {
@@ -64,6 +66,7 @@ export class PurchasePage implements OnInit {
 
       if (!id) {
         this.course = undefined;
+        this.checkingPurchase = false;
         return;
       }
 
@@ -75,6 +78,17 @@ export class PurchasePage implements OnInit {
           this.course = undefined;
         },
       });
+
+      this.purchasesService.hasPurchasedCourse(id).subscribe({
+        next: (response) => {
+          this.alreadyPurchased = !!response.data?.purchased;
+          this.checkingPurchase = false;
+        },
+        error: () => {
+          this.alreadyPurchased = false;
+          this.checkingPurchase = false;
+        },
+      });
     });
   }
 
@@ -82,6 +96,14 @@ export class PurchasePage implements OnInit {
     if (!this.course) {
       this.uiNotificationsService.show(
         'No existe un curso válido para comprar.',
+        'error'
+      );
+      return;
+    }
+
+    if (this.alreadyPurchased) {
+      this.uiNotificationsService.show(
+        'Ya compraste este curso.',
         'error'
       );
       return;
@@ -108,6 +130,7 @@ export class PurchasePage implements OnInit {
         this.loadingPurchase = false;
         this.purchaseSuccess = response.ok;
         this.purchaseMessage = response.message;
+        this.alreadyPurchased = true;
 
         this.uiNotificationsService.show(
           response.message,
@@ -119,6 +142,10 @@ export class PurchasePage implements OnInit {
 
         const message =
           error?.error?.message || 'No fue posible registrar la compra.';
+
+        if (error?.status === 409) {
+          this.alreadyPurchased = true;
+        }
 
         this.purchaseSuccess = false;
         this.purchaseMessage = message;

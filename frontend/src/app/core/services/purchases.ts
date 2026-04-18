@@ -47,4 +47,32 @@ export class PurchasesService {
       }
     );
   }
+
+  getMyPurchasedCourseIds(): Observable<{
+    ok: boolean;
+    data: number[];
+  }> {
+    return this.http.get<{
+      ok: boolean;
+      data: number[];
+    }>(`${this.apiUrl}/mine/course-ids`, {
+      headers: this.authService.getAuthHeaders(),
+    });
+  }
+
+  hasPurchasedCourse(cursoId: number): Observable<{
+    ok: boolean;
+    data: {
+      purchased: boolean;
+    };
+  }> {
+    return this.http.get<{
+      ok: boolean;
+      data: {
+        purchased: boolean;
+      };
+    }>(`${this.apiUrl}/mine/has-course/${cursoId}`, {
+      headers: this.authService.getAuthHeaders(),
+    });
+  }
 }
