@@ -9,7 +9,7 @@ import { Course } from '../../../../shared/interfaces/course.interface';
 @Component({
   selector: 'app-my-courses-page',
   standalone: true,
-  imports: [CourseCard],
+  imports: [],
   templateUrl: './my-courses-page.html',
   styleUrl: './my-courses-page.scss',
 })
